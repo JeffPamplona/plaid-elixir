@@ -45,6 +45,14 @@ defmodule Plaid.Utilities do
     |> Enum.map_join("&", fn x -> pair(x) end)
   end
 
+  @spec encode_params_json(map, map) :: binary
+  def encode_params_json(params, cred \\ %{}) do
+    params = params
+    |> Map.merge(cred)
+    |> Map.to_list
+    |> Enum.map_join(", ", fn x -> pair_json(x) end)
+  end
+
   @doc """
   Handles Plaid response.
 
@@ -133,6 +141,18 @@ defmodule Plaid.Utilities do
           param_value = to_string(value) |> URI.encode_www_form
       end
     "#{param_name}=#{param_value}"
+  end
+
+  defp pair_json({key, value}) do
+    param_name = to_string(key) |> URI.encode_www_form
+    param_value =
+      cond do
+        is_map(value) ->
+          param_value = value |> Poison.encode!
+        true ->
+          param_value = to_string(value) |> URI.encode_www_form
+      end
+    ~s("#{param_name}":"#{param_value}")
   end
 
   defp map_transactions(body) do

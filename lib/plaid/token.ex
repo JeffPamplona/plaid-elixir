@@ -15,7 +15,7 @@ defmodule Plaid.Token do
 
   defstruct [:access_token, :sandbox]
 
-  @endpoint "exchange_token"
+  @endpoint "item/public_token/exchange" # "exchange_token" # 
 
   @doc """
   Exchanges a public token for an access token.

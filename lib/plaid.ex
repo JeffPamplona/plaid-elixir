@@ -71,7 +71,7 @@ defmodule Plaid do
   """
   @spec process_url(binary) :: binary
   def process_url(endpoint) do
-    require_root_uri <> endpoint
+    require_root_uri() <> endpoint
   end
 
   @doc """
@@ -79,7 +79,8 @@ defmodule Plaid do
   """
   def request_headers() do
     Map.new
-    |> Map.put("Content-Type", "application/x-www-form-urlencoded")
+    # |> Map.put("Content-Type", "application/x-www-form-urlencoded")
+    |> Map.put("Content-Type", "application/json")
   end
 
   @doc """
