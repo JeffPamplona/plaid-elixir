@@ -115,7 +115,7 @@ defmodule Plaid do
   """
   @spec make_request_with_cred(atom, binary, map, map, map, list) :: tuple
   def make_request_with_cred(method, endpoint, cred, body \\ %{}, headers \\ %{}, options \\ []) do
-    rb = Utilities.encode_params(body, cred)
+    rb = Utilities.encode_params_json(body, cred) # Utilities.encode_params(body, cred)
     rh = request_headers() |> Map.merge(headers) |> Map.to_list
     options = httpoison_request_options() ++ options
     case request(method, endpoint, rb, rh, options) do
