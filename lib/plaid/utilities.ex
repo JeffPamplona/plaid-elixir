@@ -51,6 +51,7 @@ defmodule Plaid.Utilities do
     |> Map.merge(cred)
     |> Map.to_list
     |> Enum.map_join(", ", fn x -> pair_json(x) end)
+    "{#{params}}"
   end
 
   @doc """
@@ -125,7 +126,8 @@ defmodule Plaid.Utilities do
           _ ->
             map_long_tail_institution(body)
         end
-
+      :stripe_bank_account ->
+        Poison.decode!(body, as: %Stripe.BankAccount{})
     end
   end
 

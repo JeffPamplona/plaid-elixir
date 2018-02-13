@@ -15,7 +15,8 @@ defmodule Plaid.Token do
 
   defstruct [:access_token, :sandbox]
 
-  @endpoint "item/public_token/exchange" # "exchange_token" # 
+  @exchange_endpoint "item/public_token/exchange" # "exchange_token" #
+  @create_bank_account_endpoint "processor/stripe/bank_account_token/create"
 
   @doc """
   Exchanges a public token for an access token.
@@ -52,8 +53,16 @@ defmodule Plaid.Token do
         true ->
           params
       end
-    Plaid.make_request_with_cred(:post, @endpoint, cred || Plaid.config_or_env_cred(), params)
+    Plaid.make_request_with_cred(:post, @exchange_endpoint,
+    cred || Plaid.config_or_env_cred(), params)
     |> Utilities.handle_plaid_response(:token)
+  end
+
+  def create_bank_account(access_token, account_id, cred \\ nil) do
+    payload = %{ access_token: access_token, account_id: account_id }
+    Plaid.make_request_with_cred(:post, @create_bank_account_endpoint,
+    cred || Plaid.config_or_env_cred(), payload)
+    |> Utilities.handle_plaid_response(:stripe_bank_account)
   end
 
 end
